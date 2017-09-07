@@ -80,9 +80,9 @@ Atlas will mark the property as nullable when the type is suffixed with a ?
 
 class Family {
     /**
-    * @var People[]
+    * @var FamilyScandal?
     */
-    public $members;
+    public $familyScandal;
 }
 
 ```
