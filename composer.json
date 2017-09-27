@@ -1,4 +1,5 @@
 {
+  "name": "lorey/atlas",
   "require-dev": {
     "phpunit/phpunit": "^6.3"
   },
