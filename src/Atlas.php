@@ -2,89 +2,43 @@
 
 namespace Lorey\Atlas;
 
+use GuzzleHttp\Promise\Promise;
 use InvalidArgumentException;
-use ReflectionClass;
+use Lorey\Atlas\Type\IComplexType;
+use Lorey\Atlas\Type\IType;
 
 class Atlas
 {
-    const PROPERTY_TYPE_PATTERN = "/@var\\s*([^\\s]+)/";
+    /**
+     * @param $type
+     * @return IType
+     * @deprecated
+     */
+    public static function map($type)
+    {
+        return static::resolve($type);
+    }
 
     /**
-     * @var Property[]
+     * @param $type
+     * @return IType|IComplexType
      */
-    private $properties = [];
-
-    /**
-     * @var ReflectionClass
-     */
-    private $reflectedType;
-
-    public function __construct($type)
+    public static function resolve($type): IType
     {
         if (!is_object($type) && !class_exists($type)) {
             throw new InvalidArgumentException("Type $type does not exist");
         }
 
-        $this->reflectedType = new ReflectionClass($type);
-
-        $this->mapProperties($this->reflectedType);
-    }
-
-    public static function map($type)
-    {
-        return new Atlas($type);
-    }
-
-    private function buildProperty($name, $type): Property
-    {
-        $isArray = false;
-        $isNullable = false;
-
-        if (strpos($type, '?') !== false) {
-            $type = str_replace("?", "", $type);
-            $isNullable = true;
+        if (is_object($type)) {
+            $type = get_class($type);
         }
 
-        if (strpos($type, "[]") !== false) {
-            $type = str_replace("[]", "", $type);
-            $isArray = true;
+        $type = (new TypeFactory())->build($type);
+
+        if ($type instanceof Promise) {
+            return $type->wait();
         }
 
-        return new Property($name, $type, $isNullable, $isArray);
-    }
-
-    private function mapProperties(ReflectionClass $reflectedType)
-    {
-        foreach($reflectedType->getProperties() as $property) {
-            $matches = [];
-            preg_match(static::PROPERTY_TYPE_PATTERN, $property->getDocComment(), $matches);
-
-            if ($matches) {
-                $this->properties[$property->getName()] = $this->buildProperty($property->getName(), $matches[1]);
-            }
-        }
-    }
-
-    /**
-     * @return Property[]
-     */
-    public function getProperties(): array
-    {
-        return $this->properties;
-    }
-
-    public function hasProperty($name)
-    {
-        return isset($this->properties[$name]);
-    }
-
-    public function getProperty($name)
-    {
-        if (!$this->hasProperty($name)) {
-            $type = $this->reflectedType->name;
-            throw new AtlasException("Property $$name not found in class $type");
-        }
-
-        return $this->properties[$name];
+        return $type;
     }
 }

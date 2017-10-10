@@ -19,4 +19,9 @@ class Person
      * @var bool
      */
     public $isMarried;
+
+    /**
+     * @var Person[]
+     */
+    public $siblings;
 }

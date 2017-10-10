@@ -3,6 +3,11 @@
 namespace Lorey\Atlas;
 
 
+use GuzzleHttp\Promise\Promise;
+use Lorey\Atlas\Type\IComplexType;
+use Lorey\Atlas\Type\IType;
+use Lorey\Atlas\Type\Type;
+
 class Property
 {
     /**
@@ -11,7 +16,7 @@ class Property
     private $name;
 
     /**
-     * @var string
+     * @var Type
      */
     private $type;
 
@@ -27,15 +32,24 @@ class Property
 
     /**
      * Property constructor.
-     * @param $name
-     * @param $type
-     * @param $nullable
-     * @param $isArray
+     * @param string $name
+     * @param IType|Promise $type
+     * @param bool $nullable
+     * @param bool $isArray
      */
-    public function __construct($name, $type, $nullable, $isArray)
+    public function __construct(string $name, $type, bool $nullable, bool $isArray)
     {
+        if ($type instanceof Promise) {
+            $type->then(function($result) {
+                $this->type = $result;
+
+                var_dump($this->type);
+            });
+        } else {
+            $this->type = $type;
+        }
+
         $this->name = $name;
-        $this->type = $type;
         $this->nullable = $nullable;
         $this->isArray = $isArray;
     }
@@ -49,9 +63,9 @@ class Property
     }
 
     /**
-     * @return string
+     * @return IType|IComplexType
      */
-    public function getType()
+    public function getType(): IType
     {
         return $this->type;
     }

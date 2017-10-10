@@ -10,39 +10,45 @@ use PHPUnit\Framework\TestCase;
 
 class AtlasTest extends TestCase
 {
-	public function testMapsPrimitiveProperties()
+    public function test_maps_type_name()
+    {
+        $atlas = Atlas::map(Person::class);
+        $this->assertEquals('Person', $atlas->getName());
+    }
+
+	public function test_maps_primitive_properties()
 	{
 		$atlas = Atlas::map(Person::class);
 
-		$this->assertEquals('string', $atlas->getProperty('name')->getType());
-		$this->assertEquals('int', $atlas->getProperty('age')->getType());
-		$this->assertEquals('bool', $atlas->getProperty('isMarried')->getType());
+		$this->assertEquals('string', $atlas->getProperty('name')->getType()->getName());
+		$this->assertEquals('int', $atlas->getProperty('age')->getType()->getName());
+		$this->assertEquals('bool', $atlas->getProperty('isMarried')->getType()->getName());
 	}
 
-	public function testMapCollectionProperty()
+	public function test_maps_collection_properties()
 	{
 		$atlas = Atlas::map(Family::class);
 
 		$this->assertTrue($atlas->getProperty('members')->isArray());
 	}
 
-	public function testMapsNullableProperties()
+	public function test_maps_nullable_properties()
 	{
 		$atlas = Atlas::map(Family::class);
 
 		$this->assertTrue($atlas->getProperty('isRoyal')->isNullable());
 	}
 
-	public function testMapsInstances()
+	public function test_maps_instances()
 	{
 		$atlas = Atlas::map(new Person());
 
-		$this->assertEquals('string', $atlas->getProperty('name')->getType());
-		$this->assertEquals('int', $atlas->getProperty('age')->getType());
-		$this->assertEquals('bool', $atlas->getProperty('isMarried')->getType());
+		$this->assertEquals('string', $atlas->getProperty('name')->getType()->getName());
+		$this->assertEquals('int', $atlas->getProperty('age')->getType()->getName());
+		$this->assertEquals('bool', $atlas->getProperty('isMarried')->getType()->getName());
 	}
 
-	public function testMapsPrivateProperties()
+	public function test_maps_private_properties()
 	{
 		$atlas = Atlas::map(Family::class);
 
