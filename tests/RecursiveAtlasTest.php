@@ -12,11 +12,6 @@ class RecursiveAtlasTest extends TestCase
     public function test_maps_types_recursively()
     {
         $atlas = Atlas::resolve(Elder::class);
-
-        var_dump($atlas);
-
-//        $property = $atlas->getProperty('children');
-//
-//        $this->assertTrue($property->isType('Child'));
+        $this->assertTrue($atlas->getProperty('children')->getType()->getProperty('elder')->isClass(Elder::class));
     }
 }
