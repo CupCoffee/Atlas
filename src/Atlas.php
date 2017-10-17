@@ -3,6 +3,7 @@
 namespace Lorey\Atlas;
 
 use GuzzleHttp\Promise\Promise;
+use function GuzzleHttp\Promise\queue;
 use InvalidArgumentException;
 use Lorey\Atlas\Type\IComplexType;
 use Lorey\Atlas\Type\IType;
@@ -36,7 +37,11 @@ class Atlas
         $type = (new TypeFactory())->build($type);
 
         if ($type instanceof Promise) {
-            return $type->wait();
+            $type = $type->wait();
+            queue()->run();
+
+            return $type;
+
         }
 
         return $type;
