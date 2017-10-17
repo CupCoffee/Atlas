@@ -15,5 +15,8 @@
     "psr-4": {
       "Lorey\\Atlas\\Tests\\": "tests/"
     }
+  },
+  "require": {
+    "guzzlehttp/promises": "^1.3"
   }
 }
