@@ -37,6 +37,15 @@ class Type implements IComplexType
     }
 
     /**
+     * Get the full class of this Type
+     * @return string
+     */
+    public function getClass()
+    {
+        return $this->type->getName();
+    }
+
+    /**
      * @return Property[]
      */
     public function getProperties(): array
