@@ -42,8 +42,6 @@ class Property
         if ($type instanceof Promise) {
             $type->then(function($result) {
                 $this->type = $result;
-
-                var_dump($this->type);
             });
         } else {
             $this->type = $type;
@@ -86,8 +84,8 @@ class Property
         return $this->isArray;
     }
 
-    public function isType(string $other): bool
+    public function isClass(string $other): bool
     {
-        return $this->type === $other;
+        return $this->type->getClass() === $other;
     }
 }
