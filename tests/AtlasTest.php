@@ -12,13 +12,13 @@ class AtlasTest extends TestCase
 {
     public function test_maps_type_name()
     {
-        $atlas = Atlas::map(Person::class);
+        $atlas = Atlas::resolve(Person::class);
         $this->assertEquals('Person', $atlas->getName());
     }
 
 	public function test_maps_primitive_properties()
 	{
-		$atlas = Atlas::map(Person::class);
+		$atlas = Atlas::resolve(Person::class);
 
 		$this->assertEquals('string', $atlas->getProperty('name')->getType()->getName());
 		$this->assertEquals('int', $atlas->getProperty('age')->getType()->getName());
@@ -27,21 +27,21 @@ class AtlasTest extends TestCase
 
 	public function test_maps_collection_properties()
 	{
-		$atlas = Atlas::map(Family::class);
+		$atlas = Atlas::resolve(Family::class);
 
 		$this->assertTrue($atlas->getProperty('members')->isArray());
 	}
 
 	public function test_maps_nullable_properties()
 	{
-		$atlas = Atlas::map(Family::class);
+		$atlas = Atlas::resolve(Family::class);
 
 		$this->assertTrue($atlas->getProperty('isRoyal')->isNullable());
 	}
 
 	public function test_maps_instances()
 	{
-		$atlas = Atlas::map(new Person());
+		$atlas = Atlas::resolve(new Person());
 
 		$this->assertEquals('string', $atlas->getProperty('name')->getType()->getName());
 		$this->assertEquals('int', $atlas->getProperty('age')->getType()->getName());
@@ -50,7 +50,7 @@ class AtlasTest extends TestCase
 
 	public function test_maps_private_properties()
 	{
-		$atlas = Atlas::map(Family::class);
+		$atlas = Atlas::resolve(Family::class);
 
 		$this->assertInstanceOf(Property::class, $atlas->getProperty('isRoyal'));
 	}

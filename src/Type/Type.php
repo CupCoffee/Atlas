@@ -31,7 +31,7 @@ class Type implements IComplexType
         $this->properties = $properties;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->type->getShortName();
     }
@@ -40,7 +40,7 @@ class Type implements IComplexType
      * Get the full class of this Type
      * @return string
      */
-    public function getClass()
+    public function getClass(): string
     {
         return $this->type->getName();
     }

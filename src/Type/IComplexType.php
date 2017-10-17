@@ -15,4 +15,6 @@ interface IComplexType extends IType
     public function hasProperty($name): bool;
 
     public function getProperty($name): Property;
+
+    public function getClass(): string;
 }
